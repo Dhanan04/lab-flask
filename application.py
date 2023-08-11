@@ -1,4 +1,4 @@
-from flask import Flask,jsonify,render_template,request
+from flask import Flask,jsonify,render_template,request,app
 import numpy as np
 import pandas as pd
 import pickle
@@ -9,8 +9,8 @@ app=application
 
 ## open ridge and standerd scaler file so that model can interact with it
 ## regressor is the file name of for ridge model
-ridge_model = pickle.load(open("Pickle/regressor.pkl" , 'rb'))
-std_scaler = pickle.load(open("Pickle/scaler.pkl" , "rb"))
+ridge_model=pickle.load(open("models/ridge.pkl" , "rb"))
+std_scaler=pickle.load(open("models/scaler.pkl" , "rb"))
 
 
 @app.route("/")
@@ -30,8 +30,8 @@ def predict_datapoint():
         Classes = float(request.form.get('Classes'))
         Region = float(request.form.get('Region'))
 
-        new_data = std_scaler.transform([[Temperature,RH,Ws,Rain,FFMC,DMC,ISI,Classes,Region]])
-        result = ridge_model.predict(new_data)
+        new_data=std_scaler.transform([[Temperature,RH,Ws,Rain,FFMC,DMC,ISI,Classes,Region]])
+        result=ridge_model.predict(new_data)
 
         return render_template("home.html" , results=result[0])
 
